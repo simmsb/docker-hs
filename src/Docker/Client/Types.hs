@@ -50,6 +50,7 @@ module Docker.Client.Types (
     , defaultLogOpts
     , CreateNetworkOpts(..)
     , CreateVolumeOpts(..)
+    , defaultCreateVolumeOpts
     , VolumeInstance(..)
     , defaultCreateNetworkOpts
     , VolumePermission(..)
