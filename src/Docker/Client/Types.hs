@@ -49,6 +49,8 @@ module Docker.Client.Types (
     , LogOpts(..)
     , defaultLogOpts
     , CreateNetworkOpts(..)
+    , CreateVolumeOpts(..)
+    , VolumeInstance(..)
     , defaultCreateNetworkOpts
     , VolumePermission(..)
     , Bind(..)
@@ -144,6 +146,7 @@ data Endpoint =
       | DeleteImageEndpoint ImageDeleteOpts ImageID
       | CreateNetworkEndpoint CreateNetworkOpts
       | RemoveNetworkEndpoint NetworkID
+      | CreateVolumeEndpoint CreateVolumeOpts
     deriving (Eq, Show)
 
 -- | We should newtype this
@@ -868,6 +871,42 @@ instance ToJSON CreateNetworkOpts where
       , "Internal" .= createNetworkInternal opts
       , "EnableIPv6" .= createNetworkEnableIPv6 opts
       ]
+
+data CreateVolumeOpts = CreateVolumeOpts
+  { createVolumeName :: Maybe Text
+  , createVolumeDriver :: Maybe Text
+  , createVolumeDriverOpts :: Maybe Value
+  , createVolumeLabels :: [Label]
+  , createVolumeClusterVolumeSpec :: Maybe Value
+  }
+
+defaultCreateVolumeOpts :: CreateVolumeOpts
+defaultCreateVolumeOpts = CreateVolumeOpts {
+    createVolumeName = Nothing,
+    createVolumeDriver = Nothing,
+    createVolumeDriverOpts = Nothing,
+    createVolumeLabels = [],
+    createVolumeClusterVolumeSpec = Nothing
+  }
+
+instance ToJSON CreateVolumeOpts where
+  toJSON opts =
+    object
+      [ "Name" .= createVolumeName opts
+      , "Driver" .= createVolumeDriver opts
+      , "DriverOpts" .= createVolumeDriverOpts opts
+      , "Labels" .= createVolumeLabels opts
+      , "ClusterVolumeSpec" .= createVolumeClusterVolumeSpec opts
+      ]
+
+data VolumeInstance = VolumeInstance
+  { name :: Text
+  , labels :: [Label]
+  } deriving (Generic)
+
+instance FromJSON VolumeInstance where
+    parseJSON = genericParseJSON defaultOptions {
+            fieldLabelModifier = (\(x:xs) -> toUpper x : xs)}
 
 -- TOOD: Add support for SELinux Volume labels (eg. "ro,z" or "ro/Z")
 -- | Set permissions on volumes that you mount in the container.

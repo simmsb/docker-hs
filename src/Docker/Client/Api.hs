@@ -24,6 +24,9 @@ module Docker.Client.Api (
     -- * Network
     , createNetwork
     , removeNetwork
+    -- * Volumes
+    , createVolume
+    -- , removeVolume
     -- * Other
     , getDockerVersion
     ) where
@@ -229,3 +232,7 @@ createNetwork opts = requestHelper POST (CreateNetworkEndpoint opts)  >>= parseR
 removeNetwork :: forall m. (MonadIO m, MonadMask m) => NetworkID -> DockerT m (Either DockerError ())
 removeNetwork nid = requestUnit DELETE $ RemoveNetworkEndpoint nid
 
+
+-- | Creates a volume
+createVolume :: forall m. (MonadIO m, MonadMask m) => CreateVolumeOpts -> DockerT m (Either DockerError VolumeInstance)
+createVolume opts = requestHelper' POST (CreateVolumeEndpoint opts) >>= parseResponse

@@ -78,6 +78,7 @@ getEndpoint v (CreateImageEndpoint name tag _) = encodeURLWithQuery [v, "images"
 getEndpoint v (DeleteImageEndpoint _ cid) = encodeURL [v, "images", fromImageID cid]
 getEndpoint v (CreateNetworkEndpoint _) = encodeURL [v, "networks", "create"]
 getEndpoint v (RemoveNetworkEndpoint nid) = encodeURL [v, "networks", fromNetworkID nid]
+getEndpoint v (CreateVolumeEndpoint _) = encodeURL [v, "volumes", "create"]
 
 getEndpointRequestBody :: Endpoint -> Maybe HTTP.RequestBody
 getEndpointRequestBody VersionEndpoint = Nothing
@@ -101,6 +102,7 @@ getEndpointRequestBody (DeleteImageEndpoint _ _) = Nothing
 
 getEndpointRequestBody (CreateNetworkEndpoint opts) = Just $ HTTP.RequestBodyLBS (JSON.encode opts)
 getEndpointRequestBody (RemoveNetworkEndpoint _) = Nothing
+getEndpointRequestBody (CreateVolumeEndpoint opts) = Just $ HTTP.RequestBodyLBS (JSON.encode opts)
 
 getEndpointContentType :: Endpoint -> BSC.ByteString
 getEndpointContentType (BuildImageEndpoint _ _) = BSC.pack "application/tar"
