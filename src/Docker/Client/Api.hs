@@ -235,4 +235,4 @@ removeNetwork nid = requestUnit DELETE $ RemoveNetworkEndpoint nid
 
 -- | Creates a volume
 createVolume :: forall m. (MonadIO m, MonadMask m) => CreateVolumeOpts -> DockerT m (Either DockerError VolumeInstance)
-createVolume opts = requestHelper' POST (CreateVolumeEndpoint opts) >>= parseResponse
+createVolume opts = requestHelper POST (CreateVolumeEndpoint opts) >>= parseResponse
