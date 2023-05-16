@@ -296,3 +296,8 @@ statusCodeToError (RemoveNetworkEndpoint _) st =
         Nothing
     else
         Just $ DockerInvalidStatusCode st
+statusCodeToError (CreateVolumeEndpoint _) st =
+    if st == status201 then
+        Nothing
+    else
+        Just $ DockerInvalidStatusCode st
