@@ -1569,7 +1569,7 @@ instance FromJSON ContainerConfig where
         openStdin <- o .: "OpenStdin"
         stdinOnce <- o .: "StdinOnce"
         env <- o .: "Env"
-        cmd <- o .: "Cmd"
+        cmd <- o .:? "Cmd" .!= []
         image <- o .: "Image"
         volumes <- o .: "Volumes"
         workingDir <- o .:? "WorkingDir"
