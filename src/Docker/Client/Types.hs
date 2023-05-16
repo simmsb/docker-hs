@@ -878,7 +878,7 @@ data CreateVolumeOpts = CreateVolumeOpts
   , createVolumeDriverOpts :: Maybe Value
   , createVolumeLabels :: [Label]
   , createVolumeClusterVolumeSpec :: Maybe Value
-  }
+  } deriving (Eq, Show)
 
 defaultCreateVolumeOpts :: CreateVolumeOpts
 defaultCreateVolumeOpts = CreateVolumeOpts {
@@ -900,13 +900,14 @@ instance ToJSON CreateVolumeOpts where
       ]
 
 data VolumeInstance = VolumeInstance
-  { name :: Text
-  , labels :: [Label]
-  } deriving (Generic)
+  { volumeInstanceName :: Text
+  , volumeInstanceLabels :: [Label]
+  } deriving (Eq, Show, Generic)
 
 instance FromJSON VolumeInstance where
     parseJSON = genericParseJSON defaultOptions {
-            fieldLabelModifier = (\(x:xs) -> toUpper x : xs)}
+            fieldLabelModifier = drop (T.length "volumeInstance")
+            }
 
 -- TOOD: Add support for SELinux Volume labels (eg. "ro,z" or "ro/Z")
 -- | Set permissions on volumes that you mount in the container.
